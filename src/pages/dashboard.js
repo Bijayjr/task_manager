@@ -6,7 +6,16 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import dynamic from 'next/dynamic';
 
-const prisma = new PrismaClient();
+// PrismaClient initialization for Vercel (serverless compatibility)
+let prisma;
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient();
+} else {
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
+  }
+  prisma = global.prisma;
+}
 
 const ParticlesBackground = dynamic(
   () => {
@@ -362,7 +371,7 @@ export default function Dashboard({ user, tasks: initialTasks }) {
             {/* Welcome Section */}
             <div className="w-full md:w-2/3 bg-[rgba(15,15,35,0.7)] backdrop-blur-xl rounded-2xl border border-[rgba(255,255,255,0.15)] shadow-2xl p-6 flex flex-col justify-center transition-all duration-500 hover:border-[rgba(255,255,255,0.25)] hover:shadow-[0_0_30px_rgba(230,230,250,0.15)]">
               <h1 className="text-3xl md:text-4xl font-bold text-[#e6e6fa] mb-2">Welcome back, {user.name.split(' ')[0]}!</h1>
-              <p className="text-lg text-[#d3d3d3]/80 mb-6">Heres whats on your plate today</p>
+              <p className="text-lg text-[#d3d3d3]/80 mb-6">Here’s what’s on your plate today</p>
               
               <div className="w-full bg-[rgba(230,230,250,0.1)] rounded-xl p-4 backdrop-blur-md">
                 <div className="flex items-center justify-between mb-2">
@@ -584,17 +593,8 @@ export default function Dashboard({ user, tasks: initialTasks }) {
 }
 
 export async function getServerSideProps(context) {
-  try {
-    const res = await fetch('https://api.example.com/data');
-    const data = await res.json();
-
-    return { props: { data } };
-  } catch (error) {
-    console.error('Error fetching dashboard data:', error);
-    return { props: { data: null, error: true } };
-  }
-}
-
+  const { Ricci = parse(context.req.headers.cookie || '');
+  const token = cookies.token;
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -625,10 +625,11 @@ export async function getServerSideProps(context) {
     return {
       props: {
         user,
-        tasks: JSON.parse(JSON.stringify(tasks))
+        tasks: JSON.parse(JSON.stringify(tasks)) // Serialize Prisma data
       },
     };
   } catch (error) {
+    console.error('Error in getServerSideProps:', error);
     return {
       redirect: {
         destination: '/login',
@@ -636,4 +637,4 @@ export async function getServerSideProps(context) {
       },
     };
   }
-
+}
