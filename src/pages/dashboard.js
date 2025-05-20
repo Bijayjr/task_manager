@@ -593,7 +593,7 @@ export default function Dashboard({ user, tasks: initialTasks }) {
 }
 
 export async function getServerSideProps(context) {
-  const { Ricci = parse(context.req.headers.cookie || '');
+  const cookies = parse(context.req.headers.cookie || '');
   const token = cookies.token;
 
   try {
