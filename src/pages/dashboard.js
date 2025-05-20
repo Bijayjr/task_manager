@@ -584,18 +584,17 @@ export default function Dashboard({ user, tasks: initialTasks }) {
 }
 
 export async function getServerSideProps(context) {
-  const { req } = context;
-  const cookies = parse(req.headers.cookie || '');
-  const token = cookies.token || null;
+  try {
+    const res = await fetch('https://api.example.com/data');
+    const data = await res.json();
 
-  if (!token) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
+    return { props: { data } };
+  } catch (error) {
+    console.error('Error fetching dashboard data:', error);
+    return { props: { data: null, error: true } };
   }
+}
+
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
