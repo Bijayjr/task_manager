@@ -362,7 +362,7 @@ export default function Dashboard({ user, tasks: initialTasks }) {
             {/* Welcome Section */}
             <div className="w-full md:w-2/3 bg-[rgba(15,15,35,0.7)] backdrop-blur-xl rounded-2xl border border-[rgba(255,255,255,0.15)] shadow-2xl p-6 flex flex-col justify-center transition-all duration-500 hover:border-[rgba(255,255,255,0.25)] hover:shadow-[0_0_30px_rgba(230,230,250,0.15)]">
               <h1 className="text-3xl md:text-4xl font-bold text-[#e6e6fa] mb-2">Welcome back, {user.name.split(' ')[0]}!</h1>
-              <p className="text-lg text-[#d3d3d3]/80 mb-6">Here's what's on your plate today</p>
+              <p className="text-lg text-[#d3d3d3]/80 mb-6">Heres whats on your plate today</p>
               
               <div className="w-full bg-[rgba(230,230,250,0.1)] rounded-xl p-4 backdrop-blur-md">
                 <div className="flex items-center justify-between mb-2">
